@@ -99,6 +99,7 @@ public:
 
     const void *Data() const { return m_buffer.data(); }
     uint32_t Size() const { return m_buffer.size(); }
+    uint32_t TypeUnmasked() const { return m_type & ~ProtobufMask; }
 
     // writing helpers
     void WriteUint16(uint16_t value) { WriteData(&value, sizeof(value)); }
@@ -107,4 +108,5 @@ public:
 
 private:
     std::vector<uint8_t> m_buffer;
+    uint32_t m_type;
 };

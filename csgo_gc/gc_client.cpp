@@ -54,6 +54,8 @@ void ClientGC::HandleMessage(uint32_t type, const void *data, uint32_t size)
 
     if (messageRead.IsProtobuf())
     {
+        Platform::Print("Received message %s\n", MessageName(messageRead.TypeUnmasked()));
+
         switch (messageRead.TypeUnmasked())
         {
         case k_EMsgGCClientHello:
@@ -171,6 +173,7 @@ void ClientGC::SendMessageToGame(bool sendToGameServer, uint32_t type,
     const google::protobuf::MessageLite &message, uint64_t jobId)
 {
     GCMessageWrite messageWrite{ type, message, jobId };
+    Platform::Print("Sending message %s\n", MessageName(messageWrite.TypeUnmasked()));
 
     if (sendToGameServer)
     {

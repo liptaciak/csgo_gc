@@ -121,6 +121,8 @@ static void AppendProtobuf(std::vector<uint8_t> &buffer, const google::protobuf:
 
 GCMessageWrite::GCMessageWrite(uint32_t type, const google::protobuf::MessageLite &message, uint64_t jobId)
 {
+    m_type = type;
+    
     // write the protobuf message hader
     WriteUint32(type | ProtobufMask);
 

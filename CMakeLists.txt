@@ -48,6 +48,7 @@ else()
 endif()
 
 add_subdirectory(csgo_gc)
+add_subdirectory(server)
 add_subdirectory(launcher)
 add_subdirectory(steamworks)
 
