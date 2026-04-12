@@ -33,11 +33,10 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         set(GC_EXE_SUFFIX "_win64")
     endif()
 else()
-    message(FATAL_ERROR "Unsupported system $[CMAKE_SYSTEM_NAME}")
+    message(FATAL_ERROR "Unsupported system ${CMAKE_SYSTEM_NAME}")
 endif()
 
 if (MSVC)
-    # statically linked crt
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 else()
     add_compile_options(-fpic -fvisibility=hidden)
@@ -52,54 +51,56 @@ add_subdirectory(server)
 add_subdirectory(launcher)
 add_subdirectory(steamworks)
 
+set(CPPSERVER_USE_SSL ON CACHE BOOL "")
+add_subdirectory(cppserver)
+
 include(FetchContent)
 set(FETCHCONTENT_QUIET FALSE)
 
+#------------------------------------------------- 
+# protobuf 
 #-------------------------------------------------
-# protobuf
-#-------------------------------------------------
-
-option(protobuf_INSTALL "Install protobuf binaries and files" OFF)
-option(protobuf_BUILD_TESTS "Build tests" OFF)
-option(protobuf_BUILD_PROTOC_BINARIES "Build libprotoc and protoc compiler" OFF)
-option(protobuf_BUILD_SHARED_LIBS "Build Shared Libraries" OFF)
-option(protobuf_WITH_ZLIB "Build with zlib support" OFF)
+option(protobuf_INSTALL OFF)
+option(protobuf_BUILD_TESTS OFF)
+option(protobuf_BUILD_PROTOC_BINARIES OFF)
+option(protobuf_BUILD_SHARED_LIBS OFF)
+option(protobuf_WITH_ZLIB OFF)
 
 FetchContent_Declare(protobuf
-	GIT_REPOSITORY https://github.com/protocolbuffers/protobuf
-	GIT_TAG 2798a968c330de223b711e4fe504800280f333fb
-	GIT_SHALLOW TRUE)
+    GIT_REPOSITORY https://github.com/protocolbuffers/protobuf
+    GIT_TAG 2798a968c330de223b711e4fe504800280f333fb
+    GIT_SHALLOW TRUE
+)
 
 FetchContent_MakeAvailable(protobuf)
 
+#------------------------------------------------- 
+# cryptopp
 #-------------------------------------------------
-# cryptopp-cmake
-#-------------------------------------------------
-
-option(CRYPTOPP_BUILD_TESTING "Build library tests" OFF)
-option(CRYPTOPP_INSTALL "Generate the install target for this project." OFF)
+option(CRYPTOPP_BUILD_TESTING OFF)
+option(CRYPTOPP_INSTALL OFF)
 
 FetchContent_Declare(cryptopp-cmake
-	GIT_REPOSITORY https://github.com/abdes/cryptopp-cmake
-	GIT_SHALLOW TRUE)
+    GIT_REPOSITORY https://github.com/abdes/cryptopp-cmake
+    GIT_SHALLOW TRUE
+)
 
 FetchContent_MakeAvailable(cryptopp-cmake)
 
 if (MSVC)
-    # shut the fuck up
     target_compile_definitions(cryptopp PRIVATE _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
 endif()
 
+#------------------------------------------------- 
+# funchook 
 #-------------------------------------------------
-# funchook
-#-------------------------------------------------
-
-option(FUNCHOOK_BUILD_SHARED "build shared library" OFF)
-option(FUNCHOOK_BUILD_TESTS "Build tests" OFF)
-option(FUNCHOOK_INSTALL "Install Funchook" OFF)
+option(FUNCHOOK_BUILD_SHARED OFF)
+option(FUNCHOOK_BUILD_TESTS OFF)
+option(FUNCHOOK_INSTALL OFF)
 
 FetchContent_Declare(funchook
-	GIT_REPOSITORY https://github.com/kubo/funchook
-	GIT_SHALLOW TRUE)
+    GIT_REPOSITORY https://github.com/kubo/funchook
+    GIT_SHALLOW TRUE
+)
 
 FetchContent_MakeAvailable(funchook)

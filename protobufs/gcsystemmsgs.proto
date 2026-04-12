@@ -31,6 +31,11 @@ message CMsgGCHRecurringSubscriptionStatusChange {
     optional bool active = 4;
 }
 
+message CMsgGCCustomAuth {
+    optional uint32 steam_id = 1;
+    optional uint32 session_ticket = 2;
+}
+
 message CQuest_PublisherAddCommunityItemsToPlayer_Request {
     optional uint64 steamid = 1;
     optional uint32 appid = 2;
@@ -208,6 +213,7 @@ enum EGCBaseClientMsg {
     k_EMsgGCClientHelloR2 = 4013;
     k_EMsgGCClientHelloR3 = 4014;
     k_EMsgGCClientHelloR4 = 4015;
+    k_EMsgGCCustomAuth = 40016;
 }
 
 enum EGCToGCMsg {
