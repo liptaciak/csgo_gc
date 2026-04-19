@@ -46,16 +46,15 @@ else()
     endif()
 endif()
 
+find_package(Boost REQUIRED)
+
+include(FetchContent)
+set(FETCHCONTENT_QUIET FALSE)
+
 add_subdirectory(csgo_gc)
 add_subdirectory(server)
 add_subdirectory(launcher)
 add_subdirectory(steamworks)
-
-set(CPPSERVER_USE_SSL ON CACHE BOOL "")
-add_subdirectory(cppserver)
-
-include(FetchContent)
-set(FETCHCONTENT_QUIET FALSE)
 
 #------------------------------------------------- 
 # protobuf 

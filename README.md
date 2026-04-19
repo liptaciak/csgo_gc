@@ -28,11 +28,7 @@ While it's still possible to connect CS:GO to CS2's GC by spoofing the version n
 
 ## Planned features
 - Rest of the core features (trade ups, souvenirs, storage units, StatTrak swaps...)
-
-I'm still looking for the **full** CS:GO Item Schema. If you have a relatively recent copy of it and are willing to share it, let me know!
-
-## Not planned
-- Matchmaking (can't be implemented without a centralized server)
+- Matchmaking, central server
 
 ## Installation
 - Download [CS:GO from Steam](steam://install/4465480)
@@ -43,21 +39,31 @@ I'm still looking for the **full** CS:GO Item Schema. If you have a relatively r
 - Launch the game. If you get the annoying VAC message box, launch the game with the -steam argument
 - macOS users: The release binaries are not notarized, so if you're using them, you'll have to deal with that somehow
 
-## Inventory editing
-For GUI inventory editors, see https://github.com/mikkokko/csgo_gc/issues/82. For manual editing, there is a guide made by someone else [here](https://gist.github.com/dricotec/1ae3deb06c42012970c00df914348e76).
-
 ## Configuration
 See [csgo_gc/config.txt](examples/config.txt) for available options.
 
 ## Building
 Requirements:
+- vcpkg
 - Git
 - CMake 3.20 or newer
 - C++ compiler with C++17 support (VS 2017 or later, Clang 5 or later, GCC 7 or later)
 
+If you are using vcpkg to install Boost.Asio, add this flag to `cmake`:
+
+`-DCMAKE_TOOLCHAIN_FILE=/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake`
+
+and if on Windows:
+
+`-DVCPKG_TARGET_TRIPLET=x86-windows`
+
 The game is 32-bit on Windows so you need to build as 32-bit:
 
 `cmake -A Win32 -B build`
+
+With vcpkg:
+
+`cmake -A Win32 -B build -DCMAKE_TOOLCHAIN_FILE=/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x86-windows`
 
 Linux dedicated servers are also 32-bit:
 
@@ -73,7 +79,8 @@ For Linux clients you don't have to specify any additional options.
 This project is licensed under the 2-Clause BSD License. See [LICENSE.md](LICENSE.md) for details.
 
 ## Credits
-* **Mikko Kokko** - Author
+* **lpta** - Author
+* **Mikko Kokko** - Author of the official [csgo_gc](https://github.com/mikkokko/csgo_gc) project.
 * **Theeto** - Code reused from the predecessor project, unusual loot lists
 
 ## Third party dependencies
@@ -81,3 +88,4 @@ This project is licensed under the 2-Clause BSD License. See [LICENSE.md](LICENS
 - [funchook](https://github.com/kubo/funchook) ([GPL v2 with Classpath Exception](https://github.com/kubo/funchook/blob/master/LICENSE))
 - [diStorm3](https://github.com/gdabah/distorm) ([3-Clause BSD License](https://github.com/gdabah/distorm/blob/master/COPYING))
 - [protobuf](https://github.com/protocolbuffers/protobuf) ([3-Clause BSD License](https://github.com/protocolbuffers/protobuf/blob/main/LICENSE))
+- [Boost.Asio](https://github.com/boostorg/asio)

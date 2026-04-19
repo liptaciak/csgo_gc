@@ -1,3 +1,0 @@
-[submodule "cppserver"]
-	path = cppserver
-	url = https://github.com/chronoxor/CppServer.git

@@ -1,109 +1,67 @@
-#include "server/asio/tcp_server.h"
-#include "threads/thread.h"
+#include <boost/asio/co_spawn.hpp>
+#include <boost/asio/detached.hpp>
+#include <boost/asio/io_context.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/signal_set.hpp>
+#include <boost/asio/write.hpp>
 
-#include <iostream>
+#include <cstdio>
 
-class ChatSession : public CppServer::Asio::TCPSession
+using boost::asio::ip::tcp;
+using boost::asio::awaitable;
+using boost::asio::co_spawn;
+using boost::asio::detached;
+using boost::asio::use_awaitable;
+namespace this_coro = boost::asio::this_coro;
+
+#if defined(BOOST_ASIO_ENABLE_HANDLER_TRACKING)
+# define use_awaitable \
+boost::asio::use_awaitable_t(__FILE__, __LINE__, __PRETTY_FUNCTION__)
+#endif
+
+awaitable<void> echo(tcp::socket socket)
 {
-public:
-    using CppServer::Asio::TCPSession::TCPSession;
-
-protected:
-    void onConnected() override
+    try
     {
-        std::cout << "Chat TCP session with Id " << id() << " connected!" << std::endl;
-
-        std::string message("Hello from TCP chat! Please send a message or '!' to disconnect the client!");
-        SendAsync(message);
-    }
-
-    void onDisconnected() override
-    {
-        std::cout << "Chat TCP session with Id " << id() << " disconnected!" << std::endl;
-    }
-
-    void onReceived(const void* buffer, size_t size) override
-    {
-        std::string message((const char*)buffer, size);
-        std::cout << "Incoming: " << message << std::endl;
-
-        server()->Multicast(message);
-
-        if (message == "!")
-            DisconnectAsync();
-    }
-
-    void onError(int error, const std::string& category, const std::string& message) override
-    {
-        std::cout << "Chat TCP session caught an error with code " << error << " and category '" << category << "': " << message << std::endl;
-    }
-};
-
-class ChatServer : public CppServer::Asio::TCPServer
-{
-public:
-    using CppServer::Asio::TCPServer::TCPServer;
-
-protected:
-    std::shared_ptr<CppServer::Asio::TCPSession> CreateSession(std::shared_ptr<CppServer::Asio::TCPServer> server) override
-    {
-        return std::make_shared<ChatSession>(server);
-    }
-
-protected:
-    void onError(int error, const std::string& category, const std::string& message) override
-    {
-        std::cout << "Chat TCP server caught an error with code " << error << " and category '" << category << "': " << message << std::endl;
-    }
-};
-
-int main(int argc, char** argv)
-{
-    int port = 1111;
-    if (argc > 1)
-        port = std::atoi(argv[1]);
-
-    std::cout << "TCP server port: " << port << std::endl;
-
-    auto service = std::make_shared<CppServer::Asio::Service>();
-
-    std::cout << "Asio service starting...";
-    service->Start();
-    std::cout << "Done!" << std::endl;
-
-    auto server = std::make_shared<ChatServer>(service, port);
-
-    std::cout << "Server starting...";
-    server->Start();
-    std::cout << "Done!" << std::endl;
-
-    std::cout << "Press Enter to stop the server or '!' to restart the server..." << std::endl;
-
-    std::string line;
-    while (getline(std::cin, line))
-    {
-        if (line.empty())
-            break;
-
-        if (line == "!")
+        char data[1024];
+        for (;;)
         {
-            std::cout << "Server restarting...";
-            server->Restart();
-            std::cout << "Done!" << std::endl;
-            continue;
+            std::size_t n = co_await socket.async_read_some(boost::asio::buffer(data), use_awaitable);
+            co_await async_write(socket, boost::asio::buffer(data, n), use_awaitable);
         }
-
-        line = "(admin) " + line;
-        server->Multicast(line);
     }
+    catch (std::exception& e)
+    {
+        std::printf("echo Exception: %s\n", e.what());
+    }
+}
 
-    std::cout << "Server stopping...";
-    server->Stop();
-    std::cout << "Done!" << std::endl;
+awaitable<void> listener()
+{
+    auto executor = co_await this_coro::executor;
+    tcp::acceptor acceptor(executor, {tcp::v4(), 55555});
+    for (;;)
+    {
+        tcp::socket socket = co_await acceptor.async_accept(use_awaitable);
+        co_spawn(executor, echo(std::move(socket)), detached);
+    }
+}
 
-    std::cout << "Asio service stopping...";
-    service->Stop();
-    std::cout << "Done!" << std::endl;
+int main()
+{
+    try
+    {
+        boost::asio::io_context io_context(1);
 
-    return 0;
+        boost::asio::signal_set signals(io_context, SIGINT, SIGTERM);
+        signals.async_wait([&](auto, auto){ io_context.stop(); });
+
+        co_spawn(io_context, listener(), detached);
+
+        io_context.run();
+    }
+    catch (std::exception& e)
+    {
+        std::printf("Exception: %s\n", e.what());
+    }
 }
