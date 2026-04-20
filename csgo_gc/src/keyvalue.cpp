@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "keyvalue.h"
 
 constexpr auto SubkeyReserveCount = 8;

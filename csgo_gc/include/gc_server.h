@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gc_shared.h"
+#include "../gc_shared.h"
 
 class ServerGC final : public SharedGC
 {

@@ -1,11 +1,12 @@
 // this file sucks, don't scroll down!!! all you need to know is
 // that this is the bridge betweem the game and ClientGC/ServerGC
 #include "stdafx.h"
+
 #include "steam_hook.h"
 #include "appid.h"
 #include "gc_client.h"
 #include "gc_server.h"
-#include "platform.h"
+
 #include <funchook.h>
 
 struct SteamNetworkingIdentity;

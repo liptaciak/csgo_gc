@@ -1,10 +1,6 @@
-#include <boost/asio/co_spawn.hpp>
-#include <boost/asio/detached.hpp>
-#include <boost/asio/io_context.hpp>
-#include <boost/asio/ip/tcp.hpp>
-#include <boost/asio/signal_set.hpp>
-#include <boost/asio/write.hpp>
+#include "stdafx.h"
 
+#include <boost/asio.hpp>
 #include <cstdio>
 
 using boost::asio::ip::tcp;
@@ -26,7 +22,13 @@ awaitable<void> echo(tcp::socket socket)
         char data[1024];
         for (;;)
         {
-            std::size_t n = co_await socket.async_read_some(boost::asio::buffer(data), use_awaitable);
+            uint32_t len;
+            co_await boost::asio::async_read(socket, boost::asio::buffer(&len, 4), use_awaitable);
+            len = ntohl(len);
+
+            std::vector<char> buffer(len);
+            co_await boost::asio::async_read(socket, boost::asio::buffer(buffer), use_awaitable);
+
             co_await async_write(socket, boost::asio::buffer(data, n), use_awaitable);
         }
     }

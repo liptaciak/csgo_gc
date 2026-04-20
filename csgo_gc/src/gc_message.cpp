@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "gc_message.h"
 
 GCMessageRead::GCMessageRead(uint32_t type, const void *data, uint32_t size)

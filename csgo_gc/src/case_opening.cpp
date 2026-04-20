@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "case_opening.h"
 #include "config.h"
 #include "item_schema.h"

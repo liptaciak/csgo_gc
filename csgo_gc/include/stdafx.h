@@ -15,7 +15,6 @@
 #include <unordered_map>
 #include <vector>
 
-// might as well
 #include "base_gcmessages.pb.h"
 #include "cstrike15_gcmessages.pb.h"
 #include "econ_gcmessages.pb.h"
@@ -23,6 +22,8 @@
 #include "gcsdk_gcmessages.pb.h"
 #include "gcsystemmsgs.pb.h"
 #include "steammessages.pb.h"
+
+#include "custommessages.pb.h"
 
 // used in many files for logging
 #include "platform.h"

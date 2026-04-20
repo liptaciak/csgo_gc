@@ -1,6 +1,6 @@
 #pragma once
 
-#include "networking_shared.h"
+#include "../networking_shared.h"
 
 class GCMessageWrite;
 

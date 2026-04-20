@@ -1,29 +1,30 @@
 project(csgo_gc)
 
 add_library(csgo_gc SHARED
-    appid.cpp
-    case_opening.cpp
-    config.cpp
-    gc_client.cpp
-    gc_message.cpp
-    gc_server.cpp
-    gc_shared.cpp
-    graffiti.cpp
-    inventory.cpp
-    item_schema.cpp
-    keyvalue.cpp
-    main.cpp
-    networking_client.cpp
-    networking_server.cpp
-    steam_hook.cpp)
+        src/appid.cpp
+        src/case_opening.cpp
+        src/config.cpp
+        src/gc_client.cpp
+        src/gc_message.cpp
+        src/gc_server.cpp
+        src/gc_shared.cpp
+        src/graffiti.cpp
+        src/inventory.cpp
+        src/item_schema.cpp
+        src/keyvalue.cpp
+        src/main.cpp
+        src/networking_client.cpp
+        src/networking_server.cpp
+        src/steam_hook.cpp)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    target_sources(csgo_gc PRIVATE platform_windows.cpp)
+    target_sources(csgo_gc PRIVATE src/platform_windows.cpp)
 else()
-    target_sources(csgo_gc PRIVATE platform_unix.cpp)
+    target_sources(csgo_gc PRIVATE src/platform_unix.cpp)
 endif()
 
-target_precompile_headers(csgo_gc PRIVATE stdafx.h)
+target_include_directories(csgo_gc PRIVATE include)
+target_precompile_headers(csgo_gc PRIVATE include/stdafx.h)
 
 set_target_properties(csgo_gc PROPERTIES PREFIX "")
 

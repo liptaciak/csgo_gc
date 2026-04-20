@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "platform.h"
+
 #include "steam_hook.h"
 
 #if defined(_MSC_VER)

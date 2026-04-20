@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "gc_client.h"
 #include "graffiti.h"
 #include "keyvalue.h"
@@ -52,6 +53,7 @@ void ClientGC::HandleMessage(uint32_t type, const void *data, uint32_t size)
         return;
     }
 
+    // TODO: Redirect to server
     if (messageRead.IsProtobuf())
     {
         Platform::Print("Received message %s\n", MessageName(messageRead.TypeUnmasked()));

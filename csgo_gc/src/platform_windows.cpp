@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "platform.h"
-#include "config.h" // yuck
+
+#include "config.h"
+
 #include <windows.h>
 
 namespace Platform

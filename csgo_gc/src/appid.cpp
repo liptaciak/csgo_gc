@@ -1,6 +1,7 @@
 #include "stdafx.h"
+
 #include "appid.h"
-#include "keyvalue.h" // LoadFile
+#include "keyvalue.h"
 #include "config.h"
 
 namespace AppId

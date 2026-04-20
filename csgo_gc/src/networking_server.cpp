@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "networking_server.h"
 #include "gc_message.h"
 

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "gc_shared.h"
 
 void SharedGC::StartThread()
@@ -383,6 +384,9 @@ const char *MessageName(uint32_t type)
         HANDLE_MSG(k_ESOMsg_UpdateMultiple);
         HANDLE_MSG(k_ESOMsg_CacheSubscriptionCheck);
         HANDLE_MSG(k_ESOMsg_CacheSubscriptionRefresh);
+
+        // Custom messages
+        HANDLE_MSG(k_EMsgGCCustomAuth); // 40000;
     }
 
     assert(false);

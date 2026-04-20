@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+option cc_generic_services = false;
+option optimize_for = LITE_RUNTIME;
+
+message CMsgGCCustomAuth {
+    optional uint64 steam_id = 1;
+    optional bytes session_ticket = 2;
+}
+
+enum EGCCustomMsg {
+    k_EMsgGCCustomAuth = 40000;
+}

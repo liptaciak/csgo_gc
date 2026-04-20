@@ -1,6 +1,6 @@
 #include "stdafx.h"
+
 #include "graffiti.h"
-#include "platform.h"
 
 #include <cryptopp/rsa.h>
 #include <cryptopp/rng.h>

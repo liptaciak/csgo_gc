@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "config.h"
 #include "keyvalue.h"
 #include "random.h"

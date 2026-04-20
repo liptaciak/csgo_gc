@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "inventory.h"
 #include "case_opening.h"
 #include "config.h"
