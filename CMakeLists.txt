@@ -51,6 +51,7 @@ set(FETCHCONTENT_QUIET FALSE)
 
 add_subdirectory(client)
 add_subdirectory(server)
+add_subdirectory(launcher)
 
 add_subdirectory(steamworks)
 
