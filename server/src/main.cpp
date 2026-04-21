@@ -1,19 +1,22 @@
-#include "stdafx.h"
+#include <asio.hpp>
 
-#include <boost/asio.hpp>
+#include <iostream>
 #include <cstdio>
 
-using boost::asio::ip::tcp;
-using boost::asio::awaitable;
-using boost::asio::co_spawn;
-using boost::asio::detached;
-using boost::asio::use_awaitable;
-namespace this_coro = boost::asio::this_coro;
+using asio::ip::tcp;
+using asio::awaitable;
+using asio::co_spawn;
+using asio::detached;
+using asio::use_awaitable;
+namespace this_coro = asio::this_coro;
 
-#if defined(BOOST_ASIO_ENABLE_HANDLER_TRACKING)
+#if defined(ASIO_ENABLE_HANDLER_TRACKING)
 # define use_awaitable \
-boost::asio::use_awaitable_t(__FILE__, __LINE__, __PRETTY_FUNCTION__)
+asio::use_awaitable_t(__FILE__, __LINE__, __PRETTY_FUNCTION__)
 #endif
+
+#define BLUE    "\033[94m"
+#define RESET   "\033[0m"
 
 awaitable<void> echo(tcp::socket socket)
 {
@@ -22,14 +25,8 @@ awaitable<void> echo(tcp::socket socket)
         char data[1024];
         for (;;)
         {
-            uint32_t len;
-            co_await boost::asio::async_read(socket, boost::asio::buffer(&len, 4), use_awaitable);
-            len = ntohl(len);
-
-            std::vector<char> buffer(len);
-            co_await boost::asio::async_read(socket, boost::asio::buffer(buffer), use_awaitable);
-
-            co_await async_write(socket, boost::asio::buffer(data, n), use_awaitable);
+            std::size_t n = co_await socket.async_read_some(asio::buffer(data), use_awaitable);
+            co_await async_write(socket, asio::buffer(data, n), use_awaitable);
         }
     }
     catch (std::exception& e)
@@ -51,11 +48,14 @@ awaitable<void> listener()
 
 int main()
 {
+    // TODO: Debug class
+    std::cout << BLUE << "csgo_gc" << RESET << " Game Coordinator by" << BLUE << " lpta" << RESET << " (https://github.com/liptaciak)" << std::endl;
+
     try
     {
-        boost::asio::io_context io_context(1);
+        asio::io_context io_context(1);
 
-        boost::asio::signal_set signals(io_context, SIGINT, SIGTERM);
+        asio::signal_set signals(io_context, SIGINT, SIGTERM);
         signals.async_wait([&](auto, auto){ io_context.stop(); });
 
         co_spawn(io_context, listener(), detached);

@@ -1,4 +1,4 @@
-project(csgo_gc)
+project(client)
 
 add_library(csgo_gc SHARED
         src/appid.cpp
@@ -22,6 +22,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 else()
     target_sources(csgo_gc PRIVATE src/platform_unix.cpp)
 endif()
+
+target_include_directories(csgo_gc PRIVATE ../deps/asio/include)
 
 target_include_directories(csgo_gc PRIVATE include)
 target_precompile_headers(csgo_gc PRIVATE include/stdafx.h)

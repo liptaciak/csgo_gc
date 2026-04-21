@@ -6,15 +6,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(server src/main.cpp)
 
 if(WIN32)
-    target_link_libraries(server PRIVATE Boost::boost ws2_32)
-else()
-    target_link_libraries(server PRIVATE Boost::boost)
+    target_link_libraries(server PRIVATE ws2_32)
 endif()
 
 target_compile_definitions(server PRIVATE
     GC_LIB_DIR="${GC_LIB_DIR}"
     GC_LIB_SUFFIX="${GC_LIB_SUFFIX}"
     GC_LIB_EXTENSION="${CMAKE_SHARED_LIBRARY_SUFFIX}")
+
+target_include_directories(server PRIVATE ../deps/asio/include)
 
 target_include_directories(server PRIVATE include)
 target_precompile_headers(server PRIVATE include/stdafx.h)
@@ -32,6 +32,10 @@ file(GLOB PROTOBUFS ../protobufs/*.cc)
 target_include_directories(server PRIVATE ../protobufs)
 target_sources(server PRIVATE ${PROTOBUFS})
 source_group("Protobufs" FILES ${PROTOBUFS})
+
+target_link_libraries(server PRIVATE
+    libprotobuf-lite
+    steam_api)
 
 if (OUTDIR)
     add_custom_command(TARGET server POST_BUILD

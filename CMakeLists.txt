@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(csgo_gc)
+project(client)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -46,12 +46,10 @@ else()
     endif()
 endif()
 
-find_package(Boost REQUIRED)
-
 include(FetchContent)
 set(FETCHCONTENT_QUIET FALSE)
 
-add_subdirectory(csgo_gc)
+add_subdirectory(client)
 add_subdirectory(server)
 
 add_subdirectory(steamworks)
@@ -67,7 +65,7 @@ option(protobuf_WITH_ZLIB OFF)
 
 FetchContent_Declare(protobuf
     GIT_REPOSITORY https://github.com/protocolbuffers/protobuf
-    GIT_TAG 2798a968c330de223b711e4fe504800280f333fb
+    GIT_TAG v34.1
     GIT_SHALLOW TRUE
 )
 
